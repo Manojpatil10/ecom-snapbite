@@ -12,19 +12,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/*.html", "/css/**", "/js/**", "/images/**").permitAll() // ← ADD THIS
+                .anyRequest().authenticated()
+        );
 
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(form -> form.permitAll());
+    return http.build();
+}
 
-        return http.build();
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
