@@ -19,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody User user){
+    public String register(@RequestBody User user) {
 
         user.setPassword(encoder.encode(user.getPassword()));
 
@@ -29,15 +29,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user){
+    public String login(@RequestBody User user) {
 
         User dbUser = repo.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(encoder.matches(user.getPassword(), dbUser.getPassword())){
+        if (encoder.matches(user.getPassword(), dbUser.getPassword())) {
             return "Login Successful";
         }
 
         return "Invalid Credentials";
     }
+
 }
