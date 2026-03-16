@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-COM · Sign In</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --bg: #0a0a0f;
             --surface: #13131a;
-            --border: rgba(255,255,255,0.07);
+            --border: rgba(255, 255, 255, 0.07);
             --accent: #e8ff47;
-            --accent-dim: rgba(232,255,71,0.12);
+            --accent-dim: rgba(232, 255, 71, 0.12);
             --text: #f0f0f0;
             --muted: #6b6b80;
             --error: #ff5c6a;
@@ -37,16 +46,21 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
             background-size: 60px 60px;
             animation: gridShift 20s linear infinite;
             pointer-events: none;
         }
 
         @keyframes gridShift {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(60px); }
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(60px);
+            }
         }
 
         .glow-blob {
@@ -58,22 +72,33 @@
         }
 
         .glow-blob-1 {
-            width: 500px; height: 500px;
-            background: rgba(232,255,71,0.07);
-            top: -150px; left: -150px;
+            width: 500px;
+            height: 500px;
+            background: rgba(232, 255, 71, 0.07);
+            top: -150px;
+            left: -150px;
             animation-delay: 0s;
         }
 
         .glow-blob-2 {
-            width: 400px; height: 400px;
-            background: rgba(79,255,176,0.05);
-            bottom: -100px; right: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(79, 255, 176, 0.05);
+            bottom: -100px;
+            right: -100px;
             animation-delay: -4s;
         }
 
         @keyframes blobFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, 20px) scale(1.05); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(30px, 20px) scale(1.05);
+            }
         }
 
         /* Layout */
@@ -88,14 +113,17 @@
             border: 1px solid var(--border);
             overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
             animation: containerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(30px);
         }
 
         @keyframes containerIn {
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Left panel */
@@ -114,13 +142,11 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 40px,
-                rgba(255,255,255,0.012) 40px,
-                rgba(255,255,255,0.012) 41px
-            );
+            background: repeating-linear-gradient(-45deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(255, 255, 255, 0.012) 40px,
+                    rgba(255, 255, 255, 0.012) 41px);
         }
 
         .brand {
@@ -173,13 +199,30 @@
         .orbit-ring {
             position: absolute;
             border-radius: 50%;
-            border: 1px solid rgba(232,255,71,0.15);
+            border: 1px solid rgba(232, 255, 71, 0.15);
             animation: orbit-spin 12s linear infinite;
         }
 
-        .orbit-ring:nth-child(1) { width: 160px; height: 160px; animation-duration: 8s; }
-        .orbit-ring:nth-child(2) { width: 220px; height: 220px; animation-duration: 14s; animation-direction: reverse; border-color: rgba(79,255,176,0.1); }
-        .orbit-ring:nth-child(3) { width: 280px; height: 280px; animation-duration: 20s; border-color: rgba(232,255,71,0.06); }
+        .orbit-ring:nth-child(1) {
+            width: 160px;
+            height: 160px;
+            animation-duration: 8s;
+        }
+
+        .orbit-ring:nth-child(2) {
+            width: 220px;
+            height: 220px;
+            animation-duration: 14s;
+            animation-direction: reverse;
+            border-color: rgba(79, 255, 176, 0.1);
+        }
+
+        .orbit-ring:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            animation-duration: 20s;
+            border-color: rgba(232, 255, 71, 0.06);
+        }
 
         .orbit-dot {
             position: absolute;
@@ -199,8 +242,13 @@
         }
 
         @keyframes orbit-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .center-icon {
@@ -208,7 +256,7 @@
             height: 64px;
             background: var(--accent-dim);
             border-radius: 16px;
-            border: 1px solid rgba(232,255,71,0.3);
+            border: 1px solid rgba(232, 255, 71, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -235,12 +283,25 @@
             opacity: 0;
             animation: statIn 0.5s ease forwards;
         }
-        .stat:nth-child(1) { animation-delay: 0.8s; }
-        .stat:nth-child(2) { animation-delay: 1s; }
+
+        .stat:nth-child(1) {
+            animation-delay: 0.8s;
+        }
+
+        .stat:nth-child(2) {
+            animation-delay: 1s;
+        }
 
         @keyframes statIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .stat-val {
@@ -266,7 +327,7 @@
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: thin;
-            scrollbar-color: rgba(232,255,71,0.2) transparent;
+            scrollbar-color: rgba(232, 255, 71, 0.2) transparent;
         }
 
         .right-panel::-webkit-scrollbar {
@@ -278,12 +339,12 @@
         }
 
         .right-panel::-webkit-scrollbar-thumb {
-            background: rgba(232,255,71,0.2);
+            background: rgba(232, 255, 71, 0.2);
             border-radius: 999px;
         }
 
         .right-panel::-webkit-scrollbar-thumb:hover {
-            background: rgba(232,255,71,0.4);
+            background: rgba(232, 255, 71, 0.4);
         }
 
         /* Sticky tab bar */
@@ -298,7 +359,7 @@
 
         .tab-bar {
             display: flex;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
             padding: 4px;
             margin-bottom: 0;
@@ -341,8 +402,13 @@
         }
 
         /* Form panels */
-        .form-panel { display: none; }
-        .form-panel.active { display: block; }
+        .form-panel {
+            display: none;
+        }
+
+        .form-panel.active {
+            display: block;
+        }
 
         .field {
             margin-bottom: 18px;
@@ -376,7 +442,7 @@
         .input-wrap input {
             width: 100%;
             padding: 13px 14px 13px 42px;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border);
             border-radius: 10px;
             color: var(--text);
@@ -386,15 +452,17 @@
             transition: all 0.2s ease;
         }
 
-        .input-wrap input::placeholder { color: var(--muted); }
-
-        .input-wrap input:focus {
-            border-color: rgba(232,255,71,0.5);
-            background: rgba(232,255,71,0.04);
-            box-shadow: 0 0 0 3px rgba(232,255,71,0.08);
+        .input-wrap input::placeholder {
+            color: var(--muted);
         }
 
-        .input-wrap input:focus + .input-icon,
+        .input-wrap input:focus {
+            border-color: rgba(232, 255, 71, 0.5);
+            background: rgba(232, 255, 71, 0.04);
+            box-shadow: 0 0 0 3px rgba(232, 255, 71, 0.08);
+        }
+
+        .input-wrap input:focus+.input-icon,
         .input-wrap:focus-within .input-icon {
             color: var(--accent);
         }
@@ -412,7 +480,10 @@
             transition: color 0.2s;
             line-height: 1;
         }
-        .password-toggle:hover { color: var(--text); }
+
+        .password-toggle:hover {
+            color: var(--text);
+        }
 
         .field-row {
             display: grid;
@@ -436,25 +507,35 @@
             color: var(--muted);
         }
 
-        .remember input[type="checkbox"] { display: none; }
+        .remember input[type="checkbox"] {
+            display: none;
+        }
 
         .check-box {
-            width: 16px; height: 16px;
+            width: 16px;
+            height: 16px;
             border: 1px solid var(--border);
             border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
             background: transparent;
             flex-shrink: 0;
         }
 
-        .remember input:checked ~ .check-box {
+        .remember input:checked~.check-box {
             background: var(--accent);
             border-color: var(--accent);
         }
 
-        .check-box svg { display: none; }
-        .remember input:checked ~ .check-box svg { display: block; }
+        .check-box svg {
+            display: none;
+        }
+
+        .remember input:checked~.check-box svg {
+            display: block;
+        }
 
         .forgot {
             font-size: 13px;
@@ -462,7 +543,10 @@
             text-decoration: none;
             transition: color 0.2s;
         }
-        .forgot:hover { color: var(--accent); }
+
+        .forgot:hover {
+            color: var(--accent);
+        }
 
         .submit-btn {
             width: 100%;
@@ -484,10 +568,12 @@
         .submit-btn:hover {
             background: #f0ff6a;
             transform: translateY(-1px);
-            box-shadow: 0 8px 30px rgba(232,255,71,0.25);
+            box-shadow: 0 8px 30px rgba(232, 255, 71, 0.25);
         }
 
-        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:active {
+            transform: translateY(0);
+        }
 
         .submit-btn.loading {
             pointer-events: none;
@@ -496,8 +582,9 @@
 
         .btn-spinner {
             display: none;
-            width: 18px; height: 18px;
-            border: 2px solid rgba(0,0,0,0.3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
             border-top-color: #0a0a0f;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
@@ -505,11 +592,18 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .submit-btn.loading .btn-text { display: none; }
-        .submit-btn.loading .btn-spinner { display: block; }
+        .submit-btn.loading .btn-text {
+            display: none;
+        }
+
+        .submit-btn.loading .btn-spinner {
+            display: block;
+        }
 
         /* Toast */
         #toast {
@@ -539,21 +633,21 @@
         }
 
         #toast.success {
-            background: rgba(79,255,176,0.12);
-            border: 1px solid rgba(79,255,176,0.3);
+            background: rgba(79, 255, 176, 0.12);
+            border: 1px solid rgba(79, 255, 176, 0.3);
             color: var(--success);
         }
 
         #toast.error {
-            background: rgba(255,92,106,0.12);
-            border: 1px solid rgba(255,92,106,0.3);
+            background: rgba(255, 92, 106, 0.12);
+            border: 1px solid rgba(255, 92, 106, 0.3);
             color: var(--error);
         }
 
         /* Input error state */
         .input-wrap input.invalid {
-            border-color: rgba(255,92,106,0.5);
-            box-shadow: 0 0 0 3px rgba(255,92,106,0.08);
+            border-color: rgba(255, 92, 106, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 92, 106, 0.08);
         }
 
         .field-error {
@@ -563,7 +657,9 @@
             display: none;
         }
 
-        .field-error.show { display: block; }
+        .field-error.show {
+            display: block;
+        }
 
         /* Strength bar */
         .strength-bar-wrap {
@@ -571,7 +667,9 @@
             display: none;
         }
 
-        .strength-bar-wrap.show { display: block; }
+        .strength-bar-wrap.show {
+            display: block;
+        }
 
         .strength-segments {
             display: flex;
@@ -582,7 +680,7 @@
             height: 3px;
             flex: 1;
             border-radius: 999px;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             transition: background 0.3s ease;
         }
 
@@ -599,7 +697,9 @@
             gap: 10px;
         }
 
-        .role-card input[type="radio"] { display: none; }
+        .role-card input[type="radio"] {
+            display: none;
+        }
 
         .role-card-inner {
             display: flex;
@@ -609,7 +709,7 @@
             padding: 14px 8px;
             border-radius: 10px;
             border: 1px solid var(--border);
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 12px;
@@ -618,7 +718,7 @@
         }
 
         .role-card-inner:hover {
-            border-color: rgba(232,255,71,0.25);
+            border-color: rgba(232, 255, 71, 0.25);
             color: var(--text);
         }
 
@@ -626,356 +726,397 @@
             border-color: var(--accent);
             background: var(--accent-dim);
             color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(232,255,71,0.08);
+            box-shadow: 0 0 0 3px rgba(232, 255, 71, 0.08);
         }
 
-        .role-card-inner.selected svg { stroke: var(--accent); }
+        .role-card-inner.selected svg {
+            stroke: var(--accent);
+        }
 
         @media (max-width: 700px) {
-            .container { grid-template-columns: 1fr; }
-            .left-panel { display: none; }
-            .right-panel { padding: 40px 28px; }
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                display: none;
+            }
+
+            .right-panel {
+                padding: 40px 28px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="bg-grid"></div>
-<div class="glow-blob glow-blob-1"></div>
-<div class="glow-blob glow-blob-2"></div>
+    <div class="bg-grid"></div>
+    <div class="glow-blob glow-blob-1"></div>
+    <div class="glow-blob glow-blob-2"></div>
 
-<div class="container">
-    <!-- Left Panel -->
-    <div class="left-panel">
-        <div class="left-visual">
-            <div class="orbit-ring"><div class="orbit-dot"></div></div>
-            <div class="orbit-ring"><div class="orbit-dot orbit-dot-2"></div></div>
-            <div class="orbit-ring"></div>
-            <div class="center-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM4 9h16v2H4V9zm0 4h4v6H4v-6zm6 0h10v6H10v-6z"/>
-                </svg>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="left-visual">
+                <div class="orbit-ring">
+                    <div class="orbit-dot"></div>
+                </div>
+                <div class="orbit-ring">
+                    <div class="orbit-dot orbit-dot-2"></div>
+                </div>
+                <div class="orbit-ring"></div>
+                <div class="center-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM4 9h16v2H4V9zm0 4h4v6H4v-6zm6 0h10v6H10v-6z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="tab-bar-wrap">
+                <div class="tab-bar">
+                    <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+                    <button class="tab-btn" id="registerTab" onclick="switchTab('register')">Register</button>
+                </div>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div class="form-panel active" id="loginPanel">
+                <div class="form-title">Welcome back</div>
+                <div class="form-subtitle">Sign in to your account to continue</div>
+
+                <form id="loginForm" novalidate>
+                    <div class="field">
+                        <label>Email</label>
+                        <div class="input-wrap">
+                            <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                        </div>
+                        <div class="field-error" id="loginEmailErr">Please enter a valid email</div>
+                    </div>
+
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="loginPassword" placeholder="••••••••"
+                                autocomplete="current-password">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            <button type="button" class="password-toggle" onclick="togglePwd('loginPassword', this)"
+                                title="Show/hide password">
+                                <svg id="eyeLogin" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="field-error" id="loginPwdErr">Password is required</div>
+                    </div>
+
+                    <div class="extras">
+                        <label class="remember">
+                            <input type="checkbox" id="rememberMe">
+                            <div class="check-box">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#0a0a0f"
+                                    stroke-width="2">
+                                    <polyline points="2,5 4,7 8,3" />
+                                </svg>
+                            </div>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        <span class="btn-text">Sign In →</span>
+                        <div class="btn-spinner"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div class="form-panel" id="registerPanel">
+                <div class="form-title">Create account</div>
+
+                <form id="registerForm" novalidate>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>First Name</label>
+                            <div class="input-wrap">
+                                <input type="text" id="regFirst" placeholder="John" autocomplete="given-name">
+                                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <div class="field-error" id="regFirstErr">Required</div>
+                        </div>
+                        <div class="field">
+                            <label>Last Name</label>
+                            <div class="input-wrap">
+                                <input type="text" id="regLast" placeholder="Doe" autocomplete="family-name">
+                                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <div class="field-error" id="regLastErr">Required</div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>Email</label>
+                        <div class="input-wrap">
+                            <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                        </div>
+                        <div class="field-error" id="regEmailErr">Enter a valid email</div>
+                    </div>
+
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="regPassword" placeholder="Min. 8 characters"
+                                autocomplete="new-password" oninput="checkStrength(this.value)">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                            <button type="button" class="password-toggle" onclick="togglePwd('regPassword', this)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="strength-bar-wrap" id="strengthWrap">
+                            <div class="strength-segments">
+                                <div class="strength-seg" id="seg1"></div>
+                                <div class="strength-seg" id="seg2"></div>
+                                <div class="strength-seg" id="seg3"></div>
+                                <div class="strength-seg" id="seg4"></div>
+                            </div>
+                            <div class="strength-label" id="strengthLabel">Weak</div>
+                        </div>
+                        <div class="field-error" id="regPwdErr">Min 8 characters required</div>
+                    </div>
+
+                    <div class="field" style="margin-top: 4px;">
+                        <label>Role</label>
+                        <div class="role-options">
+                            <label class="role-card" onclick="selectRole('USER')">
+                                <input type="radio" name="role" value="USER" checked>
+                                <div class="role-card-inner" id="role-USER">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                        <circle cx="12" cy="7" r="4" />
+                                    </svg>
+                                    <span>User</span>
+                                </div>
+                            </label>
+                            <label class="role-card" onclick="selectRole('ADMIN')">
+                                <input type="radio" name="role" value="ADMIN">
+                                <div class="role-card-inner" id="role-ADMIN">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    </svg>
+                                    <span>Admin</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="field-error" id="regRoleErr">Please select a role</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="registerBtn"
+                        style="margin-top: 20px; margin-bottom: 24px;">
+                        <span class="btn-text">Create Account →</span>
+                        <div class="btn-spinner"></div>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Right Panel -->
-    <div class="right-panel">
-        <div class="tab-bar-wrap">
-        <div class="tab-bar">
-            <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Sign In</button>
-            <button class="tab-btn" id="registerTab" onclick="switchTab('register')">Register</button>
-        </div>
-        </div>
+    <!-- Toast -->
+    <div id="toast"></div>
 
-        <!-- LOGIN FORM -->
-        <div class="form-panel active" id="loginPanel">
-            <div class="form-title">Welcome back</div>
-            <div class="form-subtitle">Sign in to your account to continue</div>
+    <script>
+        let selectedRole = 'USER';
 
-            <form id="loginForm" novalidate>
-                <div class="field">
-                    <label>Email</label>
-                    <div class="input-wrap">
-                        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
-                        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                        </svg>
-                    </div>
-                    <div class="field-error" id="loginEmailErr">Please enter a valid email</div>
-                </div>
-
-                <div class="field">
-                    <label>Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-                        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        <button type="button" class="password-toggle" onclick="togglePwd('loginPassword', this)" title="Show/hide password">
-                            <svg id="eyeLogin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="field-error" id="loginPwdErr">Password is required</div>
-                </div>
-
-                <div class="extras">
-                    <label class="remember">
-                        <input type="checkbox" id="rememberMe">
-                        <div class="check-box">
-                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#0a0a0f" stroke-width="2">
-                                <polyline points="2,5 4,7 8,3"/>
-                            </svg>
-                        </div>
-                        Remember me
-                    </label>
-                    <a href="#" class="forgot">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="submit-btn" id="loginBtn">
-                    <span class="btn-text">Sign In →</span>
-                    <div class="btn-spinner"></div>
-                </button>
-            </form>
-        </div>
-
-        <!-- REGISTER FORM -->
-        <div class="form-panel" id="registerPanel">
-            <div class="form-title">Create account</div>
-
-            <form id="registerForm" novalidate>
-                <div class="field-row">
-                    <div class="field">
-                        <label>First Name</label>
-                        <div class="input-wrap">
-                            <input type="text" id="regFirst" placeholder="John" autocomplete="given-name">
-                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </div>
-                        <div class="field-error" id="regFirstErr">Required</div>
-                    </div>
-                    <div class="field">
-                        <label>Last Name</label>
-                        <div class="input-wrap">
-                            <input type="text" id="regLast" placeholder="Doe" autocomplete="family-name">
-                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        </div>
-                        <div class="field-error" id="regLastErr">Required</div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label>Email</label>
-                    <div class="input-wrap">
-                        <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email">
-                        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                        </svg>
-                    </div>
-                    <div class="field-error" id="regEmailErr">Enter a valid email</div>
-                </div>
-
-                <div class="field">
-                    <label>Password</label>
-                    <div class="input-wrap">
-                        <input type="password" id="regPassword" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkStrength(this.value)">
-                        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        <button type="button" class="password-toggle" onclick="togglePwd('regPassword', this)">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="strength-bar-wrap" id="strengthWrap">
-                        <div class="strength-segments">
-                            <div class="strength-seg" id="seg1"></div>
-                            <div class="strength-seg" id="seg2"></div>
-                            <div class="strength-seg" id="seg3"></div>
-                            <div class="strength-seg" id="seg4"></div>
-                        </div>
-                        <div class="strength-label" id="strengthLabel">Weak</div>
-                    </div>
-                    <div class="field-error" id="regPwdErr">Min 8 characters required</div>
-                </div>
-
-                <div class="field" style="margin-top: 4px;">
-                    <label>Role</label>
-                    <div class="role-options">
-                        <label class="role-card" onclick="selectRole('USER')">
-                            <input type="radio" name="role" value="USER" checked>
-                            <div class="role-card-inner" id="role-USER">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                <span>User</span>
-                            </div>
-                        </label>
-                        <label class="role-card" onclick="selectRole('ADMIN')">
-                            <input type="radio" name="role" value="ADMIN">
-                            <div class="role-card-inner" id="role-ADMIN">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                                </svg>
-                                <span>Admin</span>
-                            </div>
-                        </label>
-                    </div>
-                    <div class="field-error" id="regRoleErr">Please select a role</div>
-                </div>
-
-                <button type="submit" class="submit-btn" id="registerBtn" style="margin-top: 20px; margin-bottom: 24px;">
-                    <span class="btn-text">Create Account →</span>
-                    <div class="btn-spinner"></div>
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Toast -->
-<div id="toast"></div>
-
-<script>
-    let selectedRole = 'USER';
-
-    function selectRole(role) {
-        selectedRole = role;
-        ['USER','ADMIN'].forEach(r => {
-            document.getElementById('role-' + r).classList.toggle('selected', r === role);
-        });
-    }
-
-    // Set default on load
-    document.addEventListener('DOMContentLoaded', () => selectRole('USER'));
-
-    function switchTab(tab) {
-        currentTab = tab;
-        document.getElementById('loginTab').classList.toggle('active', tab === 'login');
-        document.getElementById('registerTab').classList.toggle('active', tab === 'register');
-        document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
-        document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
-    }
-
-    function togglePwd(id, btn) {
-        const inp = document.getElementById(id);
-        const isText = inp.type === 'text';
-        inp.type = isText ? 'password' : 'text';
-        btn.innerHTML = isText
-            ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
-            : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-    }
-
-    function showToast(msg, type) {
-        const t = document.getElementById('toast');
-        const icon = type === 'success'
-            ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`
-            : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-        t.className = `show ${type}`;
-        t.innerHTML = icon + msg;
-        setTimeout(() => { t.className = ''; }, 3500);
-    }
-
-    function setLoading(btnId, loading) {
-        document.getElementById(btnId).classList.toggle('loading', loading);
-    }
-
-    function setFieldError(inputId, errId, show) {
-        const inp = document.getElementById(inputId);
-        const err = document.getElementById(errId);
-        if (show) { inp.classList.add('invalid'); err.classList.add('show'); }
-        else { inp.classList.remove('invalid'); err.classList.remove('show'); }
-    }
-
-    function checkStrength(val) {
-        const wrap = document.getElementById('strengthWrap');
-        const label = document.getElementById('strengthLabel');
-        const segs = [document.getElementById('seg1'), document.getElementById('seg2'),
-                      document.getElementById('seg3'), document.getElementById('seg4')];
-
-        if (!val) { wrap.classList.remove('show'); return; }
-        wrap.classList.add('show');
-
-        let score = 0;
-        if (val.length >= 8) score++;
-        if (/[A-Z]/.test(val)) score++;
-        if (/[0-9]/.test(val)) score++;
-        if (/[^A-Za-z0-9]/.test(val)) score++;
-
-        const colors = ['#ff5c6a', '#ff9f47', '#e8ff47', '#4fffb0'];
-        const labels = ['Weak', 'Fair', 'Good', 'Strong'];
-
-        segs.forEach((s, i) => {
-            s.style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.08)';
-        });
-        label.textContent = labels[score - 1] || 'Too short';
-        label.style.color = score > 0 ? colors[score - 1] : 'var(--muted)';
-    }
-
-    // LOGIN
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-
-        let valid = true;
-        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        setFieldError('loginEmail', 'loginEmailErr', !emailOk);
-        if (!emailOk) valid = false;
-        setFieldError('loginPassword', 'loginPwdErr', !password);
-        if (!password) valid = false;
-        if (!valid) return;
-
-        setLoading('loginBtn', true);
-
-        try {
-            const res = await fetch('http://localhost:8080/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+        function selectRole(role) {
+            selectedRole = role;
+            ['USER', 'ADMIN'].forEach(r => {
+                document.getElementById('role-' + r).classList.toggle('selected', r === role);
             });
-            const data = await res.text();
-            if (res.ok && data.toLowerCase().includes('success')) {
-                showToast('Login successful! Redirecting…', 'success');
-            } else {
-                showToast(data || 'Invalid credentials', 'error');
-            }
-        } catch (err) {
-            showToast('Cannot reach server. Try again.', 'error');
-        } finally {
-            setLoading('loginBtn', false);
         }
-    });
 
-    // REGISTER
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const first = document.getElementById('regFirst').value.trim();
-        const last = document.getElementById('regLast').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value;
+        // Set default on load
+        document.addEventListener('DOMContentLoaded', () => selectRole('USER'));
 
-        let valid = true;
-        setFieldError('regFirst', 'regFirstErr', !first); if (!first) valid = false;
-        setFieldError('regLast', 'regLastErr', !last); if (!last) valid = false;
-        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        setFieldError('regEmail', 'regEmailErr', !emailOk); if (!emailOk) valid = false;
-        setFieldError('regPassword', 'regPwdErr', password.length < 8); if (password.length < 8) valid = false;
-        if (!valid) return;
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+            document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+            document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
+            document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
+        }
 
-        setLoading('registerBtn', true);
+        function togglePwd(id, btn) {
+            const inp = document.getElementById(id);
+            const isText = inp.type === 'text';
+            inp.type = isText ? 'password' : 'text';
+            btn.innerHTML = isText
+                ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+                : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+        }
 
-        try {
-            const res = await fetch('http://localhost:8080/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: `${first} ${last}`, email, password, role: selectedRole })
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            const icon = type === 'success'
+                ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`
+                : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+            t.className = `show ${type}`;
+            t.innerHTML = icon + msg;
+            setTimeout(() => { t.className = ''; }, 3500);
+        }
+
+        function setLoading(btnId, loading) {
+            document.getElementById(btnId).classList.toggle('loading', loading);
+        }
+
+        function setFieldError(inputId, errId, show) {
+            const inp = document.getElementById(inputId);
+            const err = document.getElementById(errId);
+            if (show) { inp.classList.add('invalid'); err.classList.add('show'); }
+            else { inp.classList.remove('invalid'); err.classList.remove('show'); }
+        }
+
+        function checkStrength(val) {
+            const wrap = document.getElementById('strengthWrap');
+            const label = document.getElementById('strengthLabel');
+            const segs = [document.getElementById('seg1'), document.getElementById('seg2'),
+            document.getElementById('seg3'), document.getElementById('seg4')];
+
+            if (!val) { wrap.classList.remove('show'); return; }
+            wrap.classList.add('show');
+
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+
+            const colors = ['#ff5c6a', '#ff9f47', '#e8ff47', '#4fffb0'];
+            const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+
+            segs.forEach((s, i) => {
+                s.style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.08)';
             });
-            const data = await res.text();
-            if (res.ok) {
-                showToast('Account created! Please sign in.', 'success');
-                setTimeout(() => switchTab('login'), 1500);
-            } else {
-                showToast(data || 'Registration failed', 'error');
-            }
-        } catch (err) {
-            showToast('Cannot reach server. Try again.', 'error');
-        } finally {
-            setLoading('registerBtn', false);
+            label.textContent = labels[score - 1] || 'Too short';
+            label.style.color = score > 0 ? colors[score - 1] : 'var(--muted)';
         }
-    });
 
-    // Clear errors on input
-    ['loginEmail','loginPassword','regFirst','regLast','regEmail','regPassword'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', () => el.classList.remove('invalid'));
-    });
-</script>
+        // LOGIN
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            let valid = true;
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            setFieldError('loginEmail', 'loginEmailErr', !emailOk);
+            if (!emailOk) valid = false;
+            setFieldError('loginPassword', 'loginPwdErr', !password);
+            if (!password) valid = false;
+            if (!valid) return;
+
+            setLoading('loginBtn', true);
+
+            try {
+                const res = await fetch('http://localhost:8080/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.text();
+                if (res.ok && data.toLowerCase().includes('success')) {
+                    showToast('Login successful! Redirecting…', 'success');
+                } else {
+                    showToast(data || 'Invalid credentials', 'error');
+                }
+            } catch (err) {
+                showToast('Cannot reach server. Try again.', 'error');
+            } finally {
+                setLoading('loginBtn', false);
+            }
+        });
+
+        // REGISTER
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const first = document.getElementById('regFirst').value.trim();
+            const last = document.getElementById('regLast').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            let valid = true;
+            setFieldError('regFirst', 'regFirstErr', !first); if (!first) valid = false;
+            setFieldError('regLast', 'regLastErr', !last); if (!last) valid = false;
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            setFieldError('regEmail', 'regEmailErr', !emailOk); if (!emailOk) valid = false;
+            setFieldError('regPassword', 'regPwdErr', password.length < 8); if (password.length < 8) valid = false;
+            if (!valid) return;
+
+            setLoading('registerBtn', true);
+
+            try {
+                const res = await fetch('http://localhost:8080/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: `${first} ${last}`, email, password, role: selectedRole })
+                });
+                const data = await res.text();
+                if (res.ok) {
+                    showToast('Account created! Please sign in.', 'success');
+                    setTimeout(() => switchTab('login'), 1500);
+                } else {
+                    showToast(data || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                showToast('Cannot reach server. Try again.', 'error');
+            } finally {
+                setLoading('registerBtn', false);
+            }
+        });
+
+        // Clear errors on input
+        ['loginEmail', 'loginPassword', 'regFirst', 'regLast', 'regEmail', 'regPassword'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => el.classList.remove('invalid'));
+        });
+    </script>
 </body>
+
 </html>
