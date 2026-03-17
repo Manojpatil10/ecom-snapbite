@@ -20,7 +20,10 @@ export default function HeroBanner() {
     setAnimKey((k) => k + 1)
   }
 
-  const slide = heroSlides[active]
+  if (heroSlides.length === 0) return null
+
+  const firstSlide = heroSlides[0]!
+  const slide = heroSlides[active] ?? firstSlide
 
   const gradients: Record<number, string> = {
     0: 'from-amber-50 via-yellow-50 to-orange-50',
@@ -42,7 +45,7 @@ export default function HeroBanner() {
               {slide.tag}
             </span>
 
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-stone-900 leading-tight">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-900 leading-tight">
               {slide.headline}
               <br />
               <span style={{ color: slide.accentColor }}>{slide.sub}</span>
@@ -104,9 +107,8 @@ export default function HeroBanner() {
             <button
               key={i}
               onClick={() => goSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === active ? 'w-7 bg-stone-800' : 'w-2 bg-stone-300'
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${i === active ? 'w-7 bg-stone-800' : 'w-2 bg-stone-300'
+                }`}
               aria-label={`Slide ${i + 1}`}
             />
           ))}

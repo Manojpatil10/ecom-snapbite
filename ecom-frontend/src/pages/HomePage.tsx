@@ -101,16 +101,15 @@ export default function HomePage() {
       {/* All Products with filters */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
         {/* Category tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 mt-3 scrollbar-hide">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setCategory(cat.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
-                activeCat === cat.id
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${activeCat === cat.id
                   ? 'bg-stone-900 text-white shadow-md'
                   : 'bg-white border border-stone-200 text-stone-600 hover:border-stone-400 hover:text-stone-900'
-              }`}
+                }`}
             >
               <span>{cat.emoji}</span>
               <span>{cat.name}</span>
