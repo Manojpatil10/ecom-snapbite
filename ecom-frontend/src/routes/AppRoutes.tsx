@@ -5,7 +5,9 @@ import CartPage from '../pages/CartPage'
 import CheckoutPage from '../pages/CheckoutPage'
 import OrderSuccessPage from '../pages/OrderSuccessPage'
 import WishlistPage from '../pages/WishlistPage'
-import { LoginPage, RegisterPage, ForgotPasswordPage } from '../component/auth/AuthPages'
+import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage } from '../component/auth/AuthPages'
+import { OrdersPage } from '../pages/OrdersPage'
+import { ProfilePage } from '../pages/ProfilePage'
 
 export default function AppRoutes() {
   return (
@@ -16,9 +18,12 @@ export default function AppRoutes() {
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/order-success" element={<OrderSuccessPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
+      <Route path="/orders" element={<OrdersPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

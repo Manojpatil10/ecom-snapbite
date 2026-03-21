@@ -2,45 +2,108 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable=false)
-    private String name;
+  private String fullName;
 
-    @Column(unique=true, nullable=false)
-    private String email;
+  @Column(unique = true)
+  private String email;
 
-    @Column(nullable=false)
-    private String password;
+  private String phone;
 
-    @Column(nullable=false)
-    private String role;
+  private String password;
 
-    public User() {}
+  private String resetToken;
 
-    public Long getId() { return id; }
+  private LocalDateTime resetTokenExpiry;
 
-    public String getName() { return name; }
+  @ManyToOne
+  @JoinColumn(name = "role_id")
+  private Role role;
 
-    public String getEmail() { return email; }
+  @OneToMany(mappedBy = "user")
+  private List<Address> addresses;
 
-    public String getPassword() { return password; }
+  // ✅ Getters and Setters
 
-    public String getRole() { return role; }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) { this.id = id; }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public void setName(String name) { this.name = name; }
+  public String getFullName() {
+    return fullName;
+  }
 
-    public void setEmail(String email) { this.email = email; }
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-    public void setPassword(String password) { this.password = password; }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setRole(String role) { this.role = role; }
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public LocalDateTime getResetTokenExpiry() {
+    return resetTokenExpiry;
+  }
+
+  public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+    this.resetTokenExpiry = resetTokenExpiry;
+  }
+
+  public String getResetToken() {
+    return resetToken;
+  }
+
+  public void setResetToken(String resetToken) {
+    this.resetToken = resetToken;
+  }
+
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  public List<Address> getAddresses() {
+    return addresses;
+  }
+
+  public void setAddresses(List<Address> addresses) {
+    this.addresses = addresses;
+  }
 }

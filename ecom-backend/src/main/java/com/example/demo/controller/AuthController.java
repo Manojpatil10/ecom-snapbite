@@ -1,44 +1,48 @@
 package com.example.demo.controller;
 
-import com.example.demo.Repository.UserRepository;
-import com.example.demo.entity.User;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.dto.*;
+import com.example.demo.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserRepository repo;
-    private final PasswordEncoder encoder;
+  private final AuthService service;
 
-    public AuthController(UserRepository repo, PasswordEncoder encoder) {
-        this.repo = repo;
-        this.encoder = encoder;
+  public AuthController(AuthService s) {
+    this.service = s;
+  }
+
+  @PostMapping("/register")
+  public ApiResponse register(@RequestBody RegisterRequest r) {
+    return service.register(r);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequest r) {
+    try {
+      String token = service.login(r);
+      return ResponseEntity.ok(token);
+    } catch (RuntimeException e) {
+      return ResponseEntity
+          .status(401)
+          .body(e.getMessage()); // ✅ send error message
     }
+  }
 
-    @PostMapping("/register")
-    public String register(@RequestBody User user) {
-
-        user.setPassword(encoder.encode(user.getPassword()));
-
-        repo.save(user);
-
-        return "User Registered Successfully";
+  @PostMapping("/forgot")
+  public ResponseEntity<String> forgot(@RequestBody ForgotRequest r) {
+    try {
+      return ResponseEntity.ok(service.forgot(r));
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
     }
+  }
 
-    @PostMapping("/login")
-    public String login(@RequestBody User user) {
-
-        User dbUser = repo.findByEmail(user.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (encoder.matches(user.getPassword(), dbUser.getPassword())) {
-            return "Login Successful";
-        }
-
-        return "Invalid Credentials";
-    }
-
+  @PostMapping("/reset")
+  public String reset(@RequestBody ResetRequest r) {
+    return service.reset(r);
+  }
 }

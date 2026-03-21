@@ -1,54 +1,272 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useToast } from '../../context/ToastContext'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Spinner } from '../ui'
+import { useToast } from '../../context/ToastContext'
+import axios from 'axios'
 
+// ══════════════════════════════════════════════════════
+// ── Validators ────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+const validators = {
+  name: (v: string) => {
+    if (!v.trim()) return 'Full name is required'
+    if (v.trim().length < 2) return 'Name must be at least 2 characters'
+    return null
+  },
+  email: (v: string) => {
+    if (!v.trim()) return 'Email is required'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Enter a valid email address'
+    return null
+  },
+  phone: (v: string) => {
+    if (!v) return 'Phone number is required'
+    if (!/^\d{10}$/.test(v)) return 'Enter a valid 10-digit phone number'
+    return null
+  },
+  password: (v: string) => {
+    if (!v) return 'Password is required'
+    if (v.length < 8) return 'At least 8 characters required'
+    if (!/[A-Z]/.test(v)) return 'Must include at least one uppercase letter'
+    if (!/[0-9]/.test(v)) return 'Must include at least one number'
+    if (!/[^A-Za-z0-9]/.test(v)) return 'Must include at least one special character'
+    return null
+  },
+  confirm: (v: string, password: string) => {
+    if (!v) return 'Please confirm your password'
+    if (v !== password) return 'Passwords do not match'
+    return null
+  },
+}
+
+// ══════════════════════════════════════════════════════
+// ── Shared UI helpers ─────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+const inputCls =
+  'w-full border border-stone-200 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all'
+
+const submitCls =
+  'w-full bg-stone-900 hover:bg-stone-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed'
+
+/** Returns extra border classes based on touched + error state */
+function fieldBorder(touched: boolean, error: string | null): string {
+  if (!touched) return ''
+  return error
+    ? ' border-red-300 focus:border-red-400 focus:ring-red-100'
+    : ' border-emerald-300 focus:border-emerald-400 focus:ring-emerald-100'
+}
+
+function FieldError({ msg }: { msg: string | null }) {
+  if (!msg) return null
+  return (
+    <p className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-red-500">
+      <span>⚠</span> {msg}
+    </p>
+  )
+}
+
+function FormField({
+  label,
+  error,
+  children,
+}: {
+  label: string
+  error?: string | null
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1.5 block">
+        {label}
+      </label>
+      {children}
+      <FieldError msg={error ?? null} />
+    </div>
+  )
+}
+
+// function AuthShell({
+//   title,
+//   sub,
+//   children,
+// }: {
+//   title: string
+//   sub: string
+//   children: React.ReactNode
+// }) {
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 flex items-center justify-center px-4 py-10">
+//       <div className="w-full max-w-md">
+//         <div className="text-center mb-5">
+//           <Link to="/" className="inline-flex items-center gap-2 mb-4">
+//             <span className="text-3xl">🍌</span>
+//             <span className="font-extrabold text-2xl text-stone-900">
+//               snap<span className="text-amber-500">bite</span>
+//             </span>
+//           </Link>
+//           <h1 className="font-display font-bold text-2xl text-stone-900">{title}</h1>
+//           <p className="text-stone-500 text-sm mt-1">{sub}</p>
+//         </div>
+//         <div className="bg-white rounded-3xl shadow-xl p-8">{children}</div>
+//       </div>
+//     </div>
+//   )
+// }
+
+function AuthShell({
+  title,
+  sub,
+  children,
+}: {
+  title: string
+  sub: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-5">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <span className="text-3xl">🍌</span>
+            <span className="font-extrabold text-2xl text-stone-900">
+              snap<span className="text-amber-500">bite</span>
+            </span>
+          </Link>
+          <h1 className="font-display font-bold text-2xl text-stone-900">{title}</h1>
+          <p className="text-stone-500 text-sm mt-1">{sub}</p>
+        </div>
+
+        {/* ✅ Add relative here + home button */}
+        <div className="relative bg-white rounded-3xl shadow-xl p-8">
+          <Link
+            to="/"
+            className="absolute top-4 right-4 flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors rounded-full px-2 py-0.5 border border-stone-200 hover:border-stone-300"
+          >
+            <span className="text-sm">←</span> Home
+          </Link>
+          {children}
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+function Divider() {
+  return (
+    <div className="flex items-center gap-3 my-4">
+      <div className="flex-1 h-px bg-stone-100" />
+      <span className="text-xs text-stone-400 font-medium">or continue with</span>
+      <div className="flex-1 h-px bg-stone-100" />
+    </div>
+  )
+}
+
+function SocialButtons() {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {[
+        { label: 'Google', icon: '🔍' },
+        { label: 'Phone OTP', icon: '📱' },
+      ].map((s) => (
+        <button
+          key={s.label}
+          type="button"
+          onClick={() => alert(`${s.label} auth coming soon!`)}
+          className="flex items-center justify-center gap-2 border border-stone-200 text-stone-600 text-sm font-medium py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
+        >
+          <span>{s.icon}</span> {s.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ══════════════════════════════════════════════════════
 // ── LoginPage ─────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
 export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [touched, setTouched] = useState({ email: false, password: false })
   const { addToast } = useToast()
   const navigate = useNavigate()
 
+  const errors = {
+    email: validators.email(email),
+    password: !password ? 'Password is required' : null, // login only checks empty
+  }
+
+  const touch = (k: keyof typeof touched) =>
+    setTouched((t) => ({ ...t, [k]: true }))
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setTouched({ email: true, password: true })
+
+    if (errors.email || errors.password) {
+      addToast('Please fix the errors before continuing', 'warning')
+      return
+    }
+
     setLoading(true)
-    // TODO: replace with real API call
-    // const res = await fetch('http://localhost:8080/api/auth/login', { method:'POST', ... })
-    await new Promise((r) => setTimeout(r, 1000))
-    setLoading(false)
-    addToast('Logged in successfully! 🎉')
-    navigate('/')
+
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+
+      const data = await res.text() // 👈 because backend returns String
+
+      if (!res.ok) {
+        throw new Error(data) // 👈 error message from backend
+      }
+
+      // ✅ store JWT
+      localStorage.setItem('token', data)
+
+      addToast('Logged in successfully! 🎉', 'success')
+      navigate('/')
+
+    } catch (err: any) {
+      addToast(err.message || 'Login failed', 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <AuthShell
-      title="Welcome back"
-      sub="Login to your SnapBite account"
-    >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <FormField label="Email address">
+    <AuthShell title="Welcome back" sub="Login to your SnapBite account">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        <FormField label="Email address" error={touched.email ? errors.email : null}>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => touch('email')}
             placeholder="you@example.com"
-            required
-            className={inputCls}
+            className={inputCls + fieldBorder(touched.email, errors.email)}
           />
         </FormField>
 
-        <FormField label="Password">
+        <FormField label="Password" error={touched.password ? errors.password : null}>
           <div className="relative">
             <input
               type={showPw ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => touch('password')}
               placeholder="••••••••"
-              required
-              className={`${inputCls} pr-10`}
+              className={`${inputCls} pr-10` + fieldBorder(touched.password, errors.password)}
             />
             <button
               type="button"
@@ -61,7 +279,10 @@ export function LoginPage() {
         </FormField>
 
         <div className="flex justify-end">
-          <Link to="/forgot-password" className="text-xs text-amber-600 hover:text-amber-700 font-medium">
+          <Link
+            to="/forgot-password"
+            className="text-xs text-amber-600 hover:text-amber-700 font-medium"
+          >
             Forgot password?
           </Link>
         </div>
@@ -84,7 +305,10 @@ export function LoginPage() {
   )
 }
 
-// ── Role definitions ─────────────────────────────────
+// ══════════════════════════════════════════════════════
+// ── Role definitions ──────────────────────────────────
+// ══════════════════════════════════════════════════════
+
 type Role = 'user' | 'admin'
 
 interface RoleOption {
@@ -124,7 +348,10 @@ const ROLES: RoleOption[] = [
   },
 ]
 
+// ══════════════════════════════════════════════════════
 // ── RegisterPage ──────────────────────────────────────
+// ══════════════════════════════════════════════════════
+
 export function RegisterPage() {
   const [form, setForm] = useState({
     name: '',
@@ -132,8 +359,8 @@ export function RegisterPage() {
     phone: '',
     password: '',
     confirm: '',
-    role: 'user' as Role,
   })
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [showPw, setShowPw] = useState(false)
   const [showConfirmPw, setShowConfirmPw] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -141,11 +368,24 @@ export function RegisterPage() {
   const { addToast } = useToast()
   const navigate = useNavigate()
 
-  // Generic field updater for text inputs
   const up =
     (k: keyof typeof form) =>
       (e: React.ChangeEvent<HTMLInputElement>) =>
         setForm((f) => ({ ...f, [k]: e.target.value }))
+
+  const touch = (k: string) => setTouched((t) => ({ ...t, [k]: true }))
+
+  const errors = {
+    name: validators.name(form.name),
+    email: validators.email(form.email),
+    phone: validators.phone(form.phone),
+    password: validators.password(form.password),
+    confirm: validators.confirm(form.confirm, form.password),
+  }
+
+  const isFormValid = Object.values(errors).every((e) => e === null)
+
+  const err = (k: keyof typeof errors) => (touched[k] ? errors[k] : null)
 
   // Password strength
   const pwStrength = (() => {
@@ -165,26 +405,20 @@ export function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setApiError(null)
+    setTouched({ name: true, email: true, phone: true, password: true, confirm: true })
 
-    // Client-side validation
-    if (form.password !== form.confirm) {
-      addToast('Passwords do not match', 'error')
-      return
-    }
-    if (form.phone.length !== 10 || !/^\d{10}$/.test(form.phone)) {
-      addToast('Enter a valid 10-digit phone number', 'error')
+    if (!isFormValid) {
+      addToast('Please fix all errors before submitting', 'warning')
       return
     }
 
     setLoading(true)
-
     try {
       const payload = {
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
+        fullName: form.name, // ✅ FIX
+        email: form.email,
+        phone: form.phone,
         password: form.password,
-        role: form.role,
       }
 
       const res = await fetch('http://localhost:8080/api/auth/register', {
@@ -196,24 +430,21 @@ export function RegisterPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        // Surface backend validation / conflict errors
         const msg =
           data?.message ||
           data?.error ||
-          (res.status === 409 ? 'An account with this email already exists.' : 'Registration failed. Please try again.')
+          (res.status === 409
+            ? 'An account with this email already exists.'
+            : 'Registration failed. Please try again.')
         setApiError(msg)
         addToast(msg, 'error')
         return
       }
 
-      // Optionally store token if backend returns one
-      if (data?.token) {
-        localStorage.setItem('token', data.token)
-      }
-
-      addToast('Account created! Welcome to SnapBite 🍌')
-      navigate(form.role === 'admin' ? '/admin' : '/')
-    } catch (err) {
+      if (data?.token) localStorage.setItem('token', data.token)
+      addToast('Account created! Welcome to SnapBite 🍌', 'success')
+      navigate('/')
+    } catch {
       const msg = 'Could not connect to the server. Please try again.'
       setApiError(msg)
       addToast(msg, 'error')
@@ -222,100 +453,63 @@ export function RegisterPage() {
     }
   }
 
-  const selectedRole = ROLES.find((r) => r.value === form.role)!
-
   return (
     <AuthShell title="Create account" sub="Join SnapBite and start snacking smarter">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
 
-        {/* ── Role selector ── */}
-        <FormField label="I am registering as">
-          <div className="grid grid-cols-2 gap-3 mt-1">
-            {ROLES.map((role) => {
-              const active = form.role === role.value
-              return (
-                <button
-                  key={role.value}
-                  type="button"
-                  onClick={() => setForm((f) => ({ ...f, role: role.value }))}
-                  className={`relative flex flex-col items-start gap-2 p-3.5 rounded-xl border-2 text-left transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400 ${active
-                    ? `${role.activeBorder} ${role.activeBg}`
-                    : 'border-stone-200 hover:border-stone-300 bg-white'
-                    }`}
-                  aria-pressed={active}
-                >
-                  {/* Active check */}
-                  {active && (
-                    <span className={`absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold text-white ${role.value === 'user' ? 'bg-amber-400' : 'bg-violet-500'}`}>
-                      ✓
-                    </span>
-                  )}
-
-                  {/* Icon */}
-                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-xl ${active ? role.iconBg : 'bg-stone-100'}`}>
-                    {role.icon}
-                  </span>
-
-                  {/* Label */}
-                  <div>
-                    <p className={`text-sm font-bold leading-tight ${active ? role.activeText : 'text-stone-700'}`}>
-                      {role.label}
-                    </p>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </FormField>
-
-        {/* ── Text fields ── */}
-        <FormField label="Full Name">
+        {/* Full Name */}
+        <FormField label="Full Name" error={err('name')}>
           <input
             type="text"
             value={form.name}
             onChange={up('name')}
+            onBlur={() => touch('name')}
             placeholder="Rahul Mehta"
-            required
-            className={inputCls}
+            className={inputCls + fieldBorder(!!touched.name, errors.name)}
           />
         </FormField>
 
-        <FormField label="Email address">
+        {/* Email */}
+        <FormField label="Email address" error={err('email')}>
           <input
             type="email"
             value={form.email}
             onChange={up('email')}
+            onBlur={() => touch('email')}
             placeholder="you@example.com"
-            required
-            className={inputCls}
+            className={inputCls + fieldBorder(!!touched.email, errors.email)}
           />
         </FormField>
 
-        <FormField label="Phone">
+        {/* Phone */}
+        <FormField label="Phone" error={err('phone')}>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-sm font-medium">+91</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 text-sm font-medium">
+              +91
+            </span>
             <input
               type="tel"
               value={form.phone}
               onChange={up('phone')}
+              onBlur={() => touch('phone')}
               placeholder="9876543210"
               maxLength={10}
-              required
-              className={`${inputCls} pl-12`}
+              className={`${inputCls} pl-12` + fieldBorder(!!touched.phone, errors.phone)}
             />
           </div>
         </FormField>
 
-        <FormField label="Password">
+        {/* Password */}
+        <FormField label="Password" error={err('password')}>
           <div className="relative">
             <input
               type={showPw ? 'text' : 'password'}
               value={form.password}
               onChange={up('password')}
+              onBlur={() => touch('password')}
               placeholder="Min 8 characters"
-              required
               minLength={8}
-              className={`${inputCls} pr-10`}
+              className={`${inputCls} pr-10` + fieldBorder(!!touched.password, errors.password)}
             />
             <button
               type="button"
@@ -325,36 +519,61 @@ export function RegisterPage() {
               {showPw ? '🙈' : '👁'}
             </button>
           </div>
-          {/* Password strength meter */}
+
+          {/* Strength meter */}
           {pwStrength && (
             <div className="mt-2 space-y-1">
               <div className="h-1 bg-stone-100 rounded-full overflow-hidden">
-                <div className={`h-full rounded-full transition-all duration-300 ${pwStrength.color} ${pwStrength.width}`} />
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${pwStrength.color} ${pwStrength.width}`}
+                />
               </div>
-              <p className={`text-[11px] font-medium ${pwStrength.label === 'Weak' ? 'text-red-500' :
-                pwStrength.label === 'Fair' ? 'text-amber-500' :
-                  pwStrength.label === 'Good' ? 'text-teal-600' : 'text-emerald-600'
-                }`}>
+              <p
+                className={`text-[11px] font-medium ${pwStrength.label === 'Weak'
+                  ? 'text-red-500'
+                  : pwStrength.label === 'Fair'
+                    ? 'text-amber-500'
+                    : pwStrength.label === 'Good'
+                      ? 'text-teal-600'
+                      : 'text-emerald-600'
+                  }`}
+              >
                 Password strength: {pwStrength.label}
               </p>
             </div>
           )}
+
+          {/* Rules checklist */}
+          {form.password && (
+            <ul className="mt-2 space-y-0.5">
+              {[
+                { ok: form.password.length >= 8, text: 'At least 8 characters' },
+                { ok: /[A-Z]/.test(form.password), text: 'One uppercase letter' },
+                { ok: /[0-9]/.test(form.password), text: 'One number' },
+                { ok: /[^A-Za-z0-9]/.test(form.password), text: 'One special character (!@#$…)' },
+              ].map(({ ok, text }) => (
+                <li
+                  key={text}
+                  className={`flex items-center gap-1.5 text-[11px] font-medium ${ok ? 'text-emerald-600' : 'text-stone-400'
+                    }`}
+                >
+                  <span>{ok ? '✅' : '○'}</span> {text}
+                </li>
+              ))}
+            </ul>
+          )}
         </FormField>
 
-        <FormField label="Confirm Password">
+        {/* Confirm Password */}
+        <FormField label="Confirm Password" error={err('confirm')}>
           <div className="relative">
             <input
               type={showConfirmPw ? 'text' : 'password'}
               value={form.confirm}
               onChange={up('confirm')}
+              onBlur={() => touch('confirm')}
               placeholder="Re-enter password"
-              required
-              className={`${inputCls} pr-10 ${form.confirm && form.password !== form.confirm
-                ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
-                : form.confirm && form.password === form.confirm
-                  ? 'border-emerald-300 focus:border-emerald-400 focus:ring-emerald-100'
-                  : ''
-                }`}
+              className={`${inputCls} pr-16` + fieldBorder(!!touched.confirm, errors.confirm)}
             />
             <button
               type="button"
@@ -380,22 +599,8 @@ export function RegisterPage() {
         )}
 
         {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`${submitCls} ${selectedRole.value === 'admin'
-            ? 'bg-violet-700 hover:bg-violet-600'
-            : 'bg-stone-900 hover:bg-stone-700'
-            }`}
-        >
-          {loading ? (
-            <><Spinner /> Creating account…</>
-          ) : (
-            <>
-              <span>{selectedRole.icon}</span>
-              Create {selectedRole.label} Account
-            </>
-          )}
+        <button type="submit" disabled={loading} className={submitCls}>
+          {loading ? <><Spinner /> Creating account…</> : 'Create Account'}
         </button>
       </form>
 
@@ -409,18 +614,49 @@ export function RegisterPage() {
   )
 }
 
+// ══════════════════════════════════════════════════════
 // ── ForgotPasswordPage ────────────────────────────────
+// ══════════════════════════════════════════════════════
+
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
+  const [touched, setTouched] = useState(false)
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { addToast } = useToast()
+
+  const emailError = validators.email(email)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setTouched(true)
+
+    if (emailError) {
+      addToast('Please enter a valid email address', 'warning')
+      return
+    }
+
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 1000))
-    setLoading(false)
-    setSent(true)
+
+    try {
+      const res = await axios.post(
+        'http://localhost:8080/api/auth/forgot',
+        { email }
+      )
+
+      // ✅ success
+      addToast(res.data || 'Reset link sent!', 'success')
+      setSent(true)
+
+    } catch (err: any) {
+      // ❌ error handling (this is the best part)
+      const message =
+        err.response?.data || 'Failed to send reset link. Try again.'
+
+      addToast(message, 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -429,22 +665,38 @@ export function ForgotPasswordPage() {
         <div className="text-center space-y-4 py-4">
           <span className="text-5xl block">📧</span>
           <p className="font-semibold text-stone-800">Check your inbox</p>
-          <p className="text-sm text-stone-500">We've sent a reset link to <strong>{email}</strong>.</p>
-          <Link to="/login" className="block mt-4 text-sm text-amber-600 hover:text-amber-700 font-medium">
+          <p className="text-sm text-stone-500">
+            We've sent a reset link to <strong>{email}</strong>.
+          </p>
+          <Link
+            to="/login"
+            className="block mt-4 text-sm text-amber-600 hover:text-amber-700 font-medium"
+          >
             ← Back to Login
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormField label="Email address">
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required className={inputCls} />
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <FormField label="Email address" error={touched ? emailError : null}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched(true)}
+              placeholder="you@example.com"
+              className={inputCls + fieldBorder(touched, emailError)}
+            />
           </FormField>
+
           <button type="submit" disabled={loading} className={submitCls}>
             {loading ? <><Spinner /> Sending…</> : 'Send Reset Link'}
           </button>
+
           <p className="text-center text-sm text-stone-500">
             Remembered?{' '}
-            <Link to="/login" className="text-stone-900 font-semibold hover:text-amber-600">Login →</Link>
+            <Link to="/login" className="text-stone-900 font-semibold hover:text-amber-600">
+              Login →
+            </Link>
           </p>
         </form>
       )}
@@ -452,67 +704,79 @@ export function ForgotPasswordPage() {
   )
 }
 
-// ── Shared helpers ────────────────────────────────────
-const inputCls =
-  'w-full border border-stone-200 rounded-xl px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all'
+// ══════════════════════════════════════════════════════
+// ── ResetPasswordPage ────────────────────────────────
+// ══════════════════════════════════════════════════════
 
-const submitCls =
-  'w-full bg-stone-900 hover:bg-stone-700 text-white font-bold py-3.5 rounded-xl text-sm transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed'
+export function ResetPasswordPage() {
+  const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [loading, setLoading] = useState(false)
 
-function FormField({ label, children }: { label: string; children: React.ReactNode }) {
+  const { addToast } = useToast()
+  const navigate = useNavigate()
+  const token = new URLSearchParams(useLocation().search).get('token')
+
+  async function handleSubmit(e: any) {
+    e.preventDefault()
+
+    if (password !== confirm) {
+      addToast("Passwords do not match", "warning")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password })
+      })
+
+      const msg = await res.text()
+
+      if (!res.ok) throw new Error(msg)
+
+      addToast('Password updated successfully 🎉', 'success')
+      navigate('/login')
+
+    } catch (err: any) {
+      addToast(err.message || 'Reset failed', 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div>
-      <label className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-1.5 block">{label}</label>
-      {children}
-    </div>
-  )
-}
+    <AuthShell title="Set new password" sub="Enter your new password">
+      <form onSubmit={handleSubmit} className="space-y-4">
 
-function AuthShell({ title, sub, children }: { title: string; sub: string; children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <span className="text-3xl">🍌</span>
-            <span className="font-extrabold text-2xl text-stone-900">snap<span className="text-amber-500">bite</span></span>
-          </Link>
-          <h1 className="font-display font-bold text-2xl text-stone-900">{title}</h1>
-          <p className="text-stone-500 text-sm mt-1">{sub}</p>
-        </div>
-        <div className="bg-white rounded-3xl shadow-xl p-8">
-          {children}
-        </div>
-      </div>
-    </div>
-  )
-}
+        <FormField label="New Password">
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            className={inputCls}
+          />
+        </FormField>
 
-function Divider() {
-  return (
-    <div className="flex items-center gap-3 my-4">
-      <div className="flex-1 h-px bg-stone-100" />
-      <span className="text-xs text-stone-400 font-medium">or continue with</span>
-      <div className="flex-1 h-px bg-stone-100" />
-    </div>
-  )
-}
+        <FormField label="Confirm Password">
+          <input
+            type="password"
+            onChange={(e) => setConfirm(e.target.value)}
+            className={inputCls}
+          />
+        </FormField>
 
-function SocialButtons() {
-  return (
-    <div className="grid grid-cols-2 gap-3">
-      {[
-        { label: 'Google', icon: '🔍' },
-        { label: 'Phone OTP', icon: '📱' },
-      ].map((s) => (
-        <button
-          key={s.label}
-          onClick={() => alert(`${s.label} auth coming soon!`)}
-          className="flex items-center justify-center gap-2 border border-stone-200 text-stone-600 text-sm font-medium py-2.5 rounded-xl hover:bg-stone-50 transition-colors"
-        >
-          <span>{s.icon}</span> {s.label}
+        <button type="submit" disabled={loading} className={submitCls}>
+          {loading ? <><Spinner /> Resetting…</> : 'Reset Password'}
         </button>
-      ))}
-    </div>
+
+        <p className="text-center text-sm">
+          <Link to="/login" className="text-amber-600">Back to login</Link>
+        </p>
+
+      </form>
+    </AuthShell>
   )
 }
