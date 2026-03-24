@@ -174,7 +174,7 @@ public class AuthService {
 
     userRepo.save(u);
 
-    String resetLink = "http://localhost:5173/reset-password?token=" + token;
+    String resetLink = "https://snapbite.netlify.app//reset-password?token=" + token;
 
     emailService.send(
         u.getEmail(),
