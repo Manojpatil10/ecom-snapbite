@@ -67,17 +67,98 @@ public class AuthService {
     return new ApiResponse("User registered successfully");
   }
 
-  public String login(LoginRequest req) {
+  // public String login(LoginRequest req) {
+
+  // User u = userRepo.findByEmail(req.email)
+  // .orElseThrow(() -> new RuntimeException("User not found"));
+
+  // if (!encoder.matches(req.password, u.getPassword()))
+  // throw new RuntimeException("Invalid password");
+
+  // return jwtUtil.generateToken(
+  // u.getEmail(),
+  // u.getRole().getRole());
+  // }
+
+  public AuthResponse login(LoginRequest req) {
 
     User u = userRepo.findByEmail(req.email)
         .orElseThrow(() -> new RuntimeException("User not found"));
 
-    if (!encoder.matches(req.password, u.getPassword()))
+    if (!encoder.matches(req.password, u.getPassword())) {
       throw new RuntimeException("Invalid password");
+    }
 
-    return jwtUtil.generateToken(
+    String accessToken = jwtUtil.generateAccessToken(
         u.getEmail(),
         u.getRole().getRole());
+
+    String refreshToken = jwtUtil.generateRefreshToken(u.getEmail());
+
+    u.setRefreshToken(refreshToken);
+    u.setRefreshTokenExpiry(LocalDateTime.now().plusDays(7));
+    userRepo.save(u);
+
+    return new AuthResponse(accessToken, u.getRole().getRole());
+  }
+
+  public AuthResponse refreshAccessToken(String refreshToken) {
+
+    if (refreshToken == null || refreshToken.isBlank()) {
+      throw new RuntimeException("Refresh token missing");
+    }
+
+    if (!jwtUtil.isTokenValid(refreshToken)) {
+      throw new RuntimeException("Invalid refresh token");
+    }
+
+    if (!jwtUtil.isRefreshToken(refreshToken)) {
+      throw new RuntimeException("Not a refresh token");
+    }
+
+    String email = jwtUtil.extractEmail(refreshToken);
+
+    User u = userRepo.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (u.getRefreshToken() == null || !u.getRefreshToken().equals(refreshToken)) {
+      throw new RuntimeException("Refresh token mismatch");
+    }
+
+    if (u.getRefreshTokenExpiry() == null || u.getRefreshTokenExpiry().isBefore(LocalDateTime.now())) {
+      throw new RuntimeException("Refresh token expired");
+    }
+
+    // rotation
+    String newAccessToken = jwtUtil.generateAccessToken(u.getEmail(), u.getRole().getRole());
+    String newRefreshToken = jwtUtil.generateRefreshToken(u.getEmail());
+
+    u.setRefreshToken(newRefreshToken);
+    u.setRefreshTokenExpiry(LocalDateTime.now().plusDays(7));
+    userRepo.save(u);
+
+    return new AuthResponse(newAccessToken, u.getRole().getRole());
+  }
+
+  public String getStoredRefreshToken(String email) {
+    return userRepo.findByEmail(email)
+        .map(User::getRefreshToken)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+  }
+
+  public void logout(String refreshToken) {
+    if (refreshToken == null || refreshToken.isBlank())
+      return;
+
+    try {
+      String email = jwtUtil.extractEmail(refreshToken);
+      userRepo.findByEmail(email).ifPresent(u -> {
+        u.setRefreshToken(null);
+        u.setRefreshTokenExpiry(null);
+        userRepo.save(u);
+      });
+    } catch (Exception ignored) {
+    }
   }
 
   // forgot password

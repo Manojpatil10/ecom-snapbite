@@ -26,6 +26,12 @@ public class User {
 
   private LocalDateTime resetTokenExpiry;
 
+  // ✅ add these two fields
+  @Column(length = 1000)
+  private String refreshToken;
+
+  private LocalDateTime refreshTokenExpiry;
+
   @ManyToOne
   @JoinColumn(name = "role_id")
   private Role role;
@@ -75,6 +81,14 @@ public class User {
     this.password = password;
   }
 
+  public String getResetToken() {
+    return resetToken;
+  }
+
+  public void setResetToken(String resetToken) {
+    this.resetToken = resetToken;
+  }
+
   public LocalDateTime getResetTokenExpiry() {
     return resetTokenExpiry;
   }
@@ -83,12 +97,21 @@ public class User {
     this.resetTokenExpiry = resetTokenExpiry;
   }
 
-  public String getResetToken() {
-    return resetToken;
+  // ✅ refresh token getter/setter
+  public String getRefreshToken() {
+    return refreshToken;
   }
 
-  public void setResetToken(String resetToken) {
-    this.resetToken = resetToken;
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
+  public LocalDateTime getRefreshTokenExpiry() {
+    return refreshTokenExpiry;
+  }
+
+  public void setRefreshTokenExpiry(LocalDateTime refreshTokenExpiry) {
+    this.refreshTokenExpiry = refreshTokenExpiry;
   }
 
   public Role getRole() {

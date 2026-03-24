@@ -8,6 +8,7 @@ import WishlistPage from '../pages/WishlistPage'
 import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage } from '../component/auth/AuthPages'
 import { OrdersPage } from '../pages/OrdersPage'
 import { ProfilePage } from '../pages/ProfilePage'
+import AdminDashboard from '../pages/AdminDashboard'
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

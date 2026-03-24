@@ -86,34 +86,6 @@ function FormField({
   )
 }
 
-// function AuthShell({
-//   title,
-//   sub,
-//   children,
-// }: {
-//   title: string
-//   sub: string
-//   children: React.ReactNode
-// }) {
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-stone-100 flex items-center justify-center px-4 py-10">
-//       <div className="w-full max-w-md">
-//         <div className="text-center mb-5">
-//           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-//             <span className="text-3xl">🍌</span>
-//             <span className="font-extrabold text-2xl text-stone-900">
-//               snap<span className="text-amber-500">bite</span>
-//             </span>
-//           </Link>
-//           <h1 className="font-display font-bold text-2xl text-stone-900">{title}</h1>
-//           <p className="text-stone-500 text-sm mt-1">{sub}</p>
-//         </div>
-//         <div className="bg-white rounded-3xl shadow-xl p-8">{children}</div>
-//       </div>
-//     </div>
-//   )
-// }
-
 function AuthShell({
   title,
   sub,
@@ -219,20 +191,20 @@ export function LoginPage() {
       const res = await fetch('http://localhost:8080/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           email,
           password,
         }),
       })
 
-      const data = await res.text() // 👈 because backend returns String
+      const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data) // 👈 error message from backend
+        throw new Error(data?.message || 'Login failed')
       }
 
-      // ✅ store JWT
-      localStorage.setItem('token', data)
+      localStorage.setItem('accessToken', data.accessToken)
 
       addToast('Logged in successfully! 🎉', 'success')
       navigate('/')
@@ -441,8 +413,14 @@ export function RegisterPage() {
         return
       }
 
-      if (data?.token) localStorage.setItem('token', data.token)
-      addToast('Account created! Welcome to SnapBite 🍌', 'success')
+      // if (data?.token) localStorage.setItem('token', data.token)
+      if (data?.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken)
+      }
+      if (data?.role) {
+        localStorage.setItem('role', data.role)
+      }
+      addToast('Account created successfully! Please login.', 'success')
       navigate('/')
     } catch {
       const msg = 'Could not connect to the server. Please try again.'
@@ -778,5 +756,32 @@ export function ResetPasswordPage() {
 
       </form>
     </AuthShell>
+  )
+}
+
+// ══════════════════════════════════════════════════════
+// ── Logout ────────────────────────────────
+// ══════════════════════════════════════════════════════
+
+function Logout() {
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    try {
+      await fetch('http://localhost:8080/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } catch (err) {
+      console.error('Logout API failed', err)
+    } finally {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('role')
+      navigate('/')
+    }
+  }
+
+  return (
+    <button onClick={handleLogout}>Logout</button>
   )
 }

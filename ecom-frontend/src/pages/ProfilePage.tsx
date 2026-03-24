@@ -211,8 +211,8 @@ export function ProfilePage() {
                 <h1 className="text-lg font-extrabold text-stone-900 truncate">{profile.fullName}</h1>
                 <p className="text-sm text-stone-500 truncate">{profile.email}</p>
                 <span className={`inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full ${profile.role === 'ROLE_ADMIN'
-                    ? 'bg-violet-100 text-violet-600 border border-violet-200'
-                    : 'bg-amber-100 text-amber-700 border border-amber-200'
+                  ? 'bg-violet-100 text-violet-600 border border-violet-200'
+                  : 'bg-amber-100 text-amber-700 border border-amber-200'
                   }`}>
                   {profile.role === 'ROLE_ADMIN' ? '🛡️ Admin' : '🛒 Customer'}
                 </span>
