@@ -309,7 +309,6 @@
 
 
 
-
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
@@ -396,10 +395,10 @@ export default function CheckoutPage() {
           <div key={s.id} className="flex items-center gap-3">
             <div className={`flex items-center gap-2 ${step === s.id ? 'text-stone-900' : steps.indexOf({ id: step, label: '' }) > i ? 'text-emerald-600' : 'text-stone-300'}`}>
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors ${step === s.id
-                  ? 'border-stone-900 bg-stone-900 text-white'
-                  : (step === 'payment' && s.id === 'address') || (step === 'review')
-                    ? 'border-emerald-500 bg-emerald-500 text-white'
-                    : 'border-stone-200 text-stone-300'
+                ? 'border-stone-900 bg-stone-900 text-white'
+                : (step === 'payment' && s.id === 'address') || (step === 'review')
+                  ? 'border-emerald-500 bg-emerald-500 text-white'
+                  : 'border-stone-200 text-stone-300'
                 }`}>
                 {(step === 'payment' && s.id === 'address') || step === 'review' && s.id !== 'review' ? '✓' : i + 1}
               </div>
@@ -506,8 +505,8 @@ export default function CheckoutPage() {
                   <label
                     key={pm.id}
                     className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === pm.id
-                        ? 'border-stone-900 bg-stone-50'
-                        : 'border-stone-100 hover:border-stone-300'
+                      ? 'border-stone-900 bg-stone-50'
+                      : 'border-stone-100 hover:border-stone-300'
                       }`}
                   >
                     <input
