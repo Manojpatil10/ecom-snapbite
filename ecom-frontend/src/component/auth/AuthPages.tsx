@@ -188,7 +188,7 @@ export function LoginPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:8080/api/auth/login', {
+      const res = await fetch('https://ecom-snapbite.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -393,7 +393,7 @@ export function RegisterPage() {
         password: form.password,
       }
 
-      const res = await fetch('http://localhost:8080/api/auth/register', {
+      const res = await fetch('https://ecom-snapbite.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -618,7 +618,7 @@ export function ForgotPasswordPage() {
 
     try {
       const res = await axios.post(
-        'http://localhost:8080/api/auth/forgot',
+        'https://ecom-snapbite.onrender.com/api/auth/forgot',
         { email }
       )
 
@@ -706,7 +706,7 @@ export function ResetPasswordPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:8080/api/auth/reset', {
+      const res = await fetch('https://ecom-snapbite.onrender.com/api/auth/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password })
@@ -768,7 +768,7 @@ function Logout() {
 
   async function handleLogout() {
     try {
-      await fetch('http://localhost:8080/api/auth/logout', {
+      await fetch('https://ecom-snapbite.onrender.com/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
       })

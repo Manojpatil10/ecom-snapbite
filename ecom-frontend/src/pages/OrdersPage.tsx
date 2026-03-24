@@ -290,7 +290,7 @@
 //       setError(null)
 //       try {
 //         const token = localStorage.getItem('token')
-//         const res = await fetch('http://localhost:8080/api/orders/my', {
+//         const res = await fetch('https://ecom-snapbite.onrender.com/api/orders/my', {
 //           headers: { Authorization: `Bearer ${token}` },
 //         })
 //         if (!res.ok) throw new Error('Failed to fetch orders')
@@ -491,10 +491,10 @@ function OrderTracker({ status, orderDate }: { status: OrderStatus; orderDate: s
             {/* Dot + line */}
             <div className="flex flex-col items-center">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm border-2 flex-shrink-0 z-10 transition-all ${active
-                  ? 'border-amber-500 bg-amber-500 text-white shadow-md shadow-amber-200'
-                  : done
-                    ? 'border-emerald-500 bg-emerald-500 text-white'
-                    : 'border-stone-200 bg-white text-stone-300'
+                ? 'border-amber-500 bg-amber-500 text-white shadow-md shadow-amber-200'
+                : done
+                  ? 'border-emerald-500 bg-emerald-500 text-white'
+                  : 'border-stone-200 bg-white text-stone-300'
                 }`}>
                 {done && !active
                   ? <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -696,7 +696,7 @@ export function OrdersPage() {
       setError(null)
       try {
         const token = localStorage.getItem('token')
-        const res = await fetch('http://localhost:8080/api/orders/my', {
+        const res = await fetch('https://ecom-snapbite.onrender.com/api/orders/my', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (!res.ok) throw new Error('Failed to fetch orders')

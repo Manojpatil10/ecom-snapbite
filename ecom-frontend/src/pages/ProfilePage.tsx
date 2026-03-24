@@ -78,7 +78,7 @@ export function ProfilePage() {
       setError(null)
       try {
         const token = getToken()
-        const res = await fetch('http://localhost:8080/api/users/me', {
+        const res = await fetch('https://ecom-snapbite.onrender.com/api/users/me', {
           headers: { Authorization: `Bearer ${token}` },
         })
         if (!res.ok) throw new Error('Failed to load profile')
@@ -105,7 +105,7 @@ export function ProfilePage() {
     setSaveSuccess(false)
     try {
       const token = getToken()
-      const res = await fetch('http://localhost:8080/api/users/me', {
+      const res = await fetch('https://ecom-snapbite.onrender.com/api/users/me', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export function ProfilePage() {
     setPwSuccess(false)
     try {
       const token = getToken()
-      const res = await fetch('http://localhost:8080/api/users/me/password', {
+      const res = await fetch('https://ecom-snapbite.onrender.com/api/users/me/password', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

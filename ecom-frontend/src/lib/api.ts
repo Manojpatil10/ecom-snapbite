@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://ecom-snapbite.onrender.com',
   withCredentials: true,
 })
 
@@ -25,7 +25,7 @@ api.interceptors.response.use(
 
       try {
         const refreshRes = await axios.post(
-          'http://localhost:8080/api/auth/refresh',
+          'https://ecom-snapbite.onrender.com/api/auth/refresh',
           {},
           { withCredentials: true }
         )

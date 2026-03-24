@@ -30,7 +30,7 @@ function isLoggedIn(): boolean {
 
 async function doLogout(): Promise<void> {
   try {
-    await fetch('http://localhost:8080/api/auth/logout', {
+    await fetch('https://ecom-snapbite.onrender.com/api/auth/logout', {
       method: 'POST',
       credentials: 'include',
     })
